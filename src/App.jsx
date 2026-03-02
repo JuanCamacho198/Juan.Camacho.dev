@@ -1,6 +1,5 @@
 import { Canvas } from '@react-three/fiber'
 import { Stars } from '@react-three/drei'
-import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { Physics } from '@react-three/rapier'
 
 import { GalleryBuilding } from './components/3D/GalleryBuilding'
@@ -30,11 +29,6 @@ function App() {
           <GalleryBuilding />
           <Player />
         </Physics>
-
-        {/* Post-procesamiento */}
-        <EffectComposer disableNormalPass>
-          <Bloom luminanceThreshold={1} mipmapBlur intensity={1.5} />
-        </EffectComposer>
       </Canvas>
       
       {/* Interfaz de Usuario y Mira */}
