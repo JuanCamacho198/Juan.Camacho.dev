@@ -1,12 +1,15 @@
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Stars } from '@react-three/drei'
+import { Stars } from '@react-three/drei'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
+import { Physics } from '@react-three/rapier'
+
 import { GalleryBuilding } from './components/3D/GalleryBuilding'
+import { Player } from './components/3D/Player'
 
 function App() {
   return (
     <div className="canvas-container">
-      <Canvas shadows camera={{ position: [0, 2, 10], fov: 60 }}>
+      <Canvas shadows camera={{ fov: 60 }}>
         {/* Luces y Ambiente */}
         <color attach="background" args={['#020202']} />
         <ambientLight intensity={0.2} />
@@ -17,39 +20,35 @@ function App() {
           shadow-bias={-0.0001}
         />
         
-        {/* Neblina oscura Cyberpunk */}
         <fog attach="fog" args={['#020202', 10, 50]} />
 
         {/* Estrellas para el cielo de fondo */}
         <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
         
-        {/* El edificio y los neones */}
-        <GalleryBuilding />
+        {/* El Motor de Físicas que envuelve el mundo y al jugador */}
+        <Physics gravity={[0, -9.81, 0]}>
+          <GalleryBuilding />
+          <Player />
+        </Physics>
 
-        {/* Post-procesamiento: El efecto Bloom para hacer que los neones brillen */}
+        {/* Post-procesamiento */}
         <EffectComposer disableNormalPass>
-          <Bloom 
-            luminanceThreshold={1} 
-            mipmapBlur 
-            intensity={1.5} 
-          />
+          <Bloom luminanceThreshold={1} mipmapBlur intensity={1.5} />
         </EffectComposer>
-
-        {/* Controles de cámara temporales (para ver el edificio antes de poner la 1ra persona) */}
-        <OrbitControls 
-          target={[0, 4, -15]} 
-          maxPolarAngle={Math.PI / 2 - 0.05} // No dejar que la cámara pase por debajo del suelo
-          minDistance={2} 
-          maxDistance={30} 
-        />
       </Canvas>
       
+      {/* Interfaz de Usuario y Mira */}
+      <div className="crosshair">+</div>
+
       <div className="ui-overlay">
         <h1>Juan.Camacho.dev</h1>
-        <p>Fase 2: El Mundo Físico y el Neón de Spawn</p>
-        <p style={{fontSize: '0.8rem', color: '#888', marginTop: '10px'}}>
-          Arrastra el ratón para rotar y la rueda para hacer zoom.
-        </p>
+        <p>Fase 3: Movimiento y Físicas en 1ra Persona</p>
+        <div className="controls-hint">
+          <p>🎮 <b>WASD</b> o Flechas para moverte</p>
+          <p>🖱️ <b>Ratón</b> para mirar</p>
+          <p>👆 <b>Clic</b> en la pantalla para jugar</p>
+          <p>⌨️ <b>ESC</b> para soltar el ratón</p>
+        </div>
       </div>
     </div>
   )
